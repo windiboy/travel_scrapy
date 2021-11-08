@@ -3,18 +3,15 @@ from peewee import *
 # 连接数据库
 database = MySQLDatabase('my_db', user='root', host='localhost', port=3306, password='yang0308')
 
-class KashiComment(Model):
+class QunarDetailLink(Model):
     id = IntegerField()
-    user_name = CharField()
-    content = TextField()
+    name = CharField()
+    content = CharField()
     status = IntegerField()
-    source = IntegerField()
-    star = IntegerField()
     extra = TextField()
-    publish_time = DateTimeField()
     create_time = DateTimeField()
     modify_time = DateTimeField()
 
     class Meta:
-        table_name = "kashi_comment"
+        table_name = "Qunar_detail_link"
         database = database

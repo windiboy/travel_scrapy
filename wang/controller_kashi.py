@@ -11,15 +11,15 @@ class Controller():
 
     def run(self):
         setting = get_project_settings()
-        start = 0
+        start = 70
         step = 1
-        end = 10
+        end = 80
 
         process = CrawlerProcess(setting)
         self.cookies = {i.split("=")[0]: i.split("=")[1]
                         for i in COOKIES_DETAIL.split("; ")}
         while start <= end:
-            process.crawl("comment", start)
+            process.crawl("QunarKashiComment", start)
             start += step
         print("start scrapy, start:{}, end:{}".format(start, end))
         process.start()
