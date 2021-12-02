@@ -14,6 +14,7 @@ class ChaoyangParkComment(Model):
     publish_time = DateTimeField()
     create_time = DateTimeField()
     modify_time = DateTimeField()
+    park_name = CharField()
 
     class Meta:
         table_name = "chaoyang_park_comment"

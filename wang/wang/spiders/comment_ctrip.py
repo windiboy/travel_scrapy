@@ -9,33 +9,42 @@ from wang.utils import *
 
 
 class ChaoyangSpider(scrapy.Spider):
-    name = "chaoyang"
+    name = "comment_ctrip"
     cookies = []
 
     def __init__(self, id=None, *args, **kwargs):
         super(ChaoyangSpider, self).__init__(*args, **kwargs)
         if id == None:
             return
-        self.id = id
-        # 0: 朝阳公园90782
-        # 1: 紫竹院公园76636
+        self.id = id  
         self.url = "https://m.ctrip.com/restapi/soa2/13444/json/getCommentCollapseList?_fxpcqlniredt=09031016118352743163&x-traceID=09031016118352743163-1633701366720-9895923"
-        # 2: 中山公园76635
-        # 3: 奥林匹克森林公园
-        # 4: 玉渊潭公园84758
-
+        # 朝阳公园90782
+        # 紫竹院公园76636
+        # 中山公园76635
+        # 奥林匹克森林公园
+        # 玉渊潭公园84758
+        # 地坛公园 76631
+        # 龙潭公园 76618
+        # 陶然亭公园 76633
+        # 月坛公园 76611
+        # 日坛公园 90855
         self.cookie = "_ga=GA1.2.154392288.1583660238; MKT_CKID=1583660239407.7opl2.fsaw; _RSG=V7aggpYzIHBtiCe9bDDkdA; _RDG=28db1243f91e6f2bfa3992d46e50470510; _RGUID=b452f62c-eaaa-41df-a9ee-34d949a0cb37; nfes_isSupportWebP=1; _RF1=36.110.2.34; MKT_CKID_LMT=1633665493668; _gid=GA1.2.2033470670.1633665495; _gat=1; _bfa=1.1583660235564.2fqtja.1.1584421364418.1633665487811.5.6; _bfs=1.2; _bfi=p1%3D290510%26p2%3D290510%26v1%3D6%26v2%3D5; _jzqco=%7C%7C%7C%7C%7C1.1338445489.1633665493663.1633665493663.1633665533031.1633665493663.1633665533031.0.0.0.2.2; __zpspc=9.3.1633665493.1633665533.2%234%7C%7C%7C%7C%7C%23"
 
     def start_requests(self):
+        print(self.cookie)
         self.cookies = {i.split("=")[0]: i.split("=")[1]
                         for i in self.cookie.split("; ")}
         self.log("start scrapy, url: {}".format(self.url))
         body_raw = "{\"arg\":{\"channelType\":2,\"collapseType\":0,\"commentTagId\":0,\"pageIndex\":2,\"pageSize\":10,\"poiId\":90782,\"sourceType\":1,\"sortType\":1,\"starType\":0},\"head\":{\"cid\":\"09031016118352743163\",\"ctok\":\"\",\"cver\":\"1.0\",\"lang\":\"01\",\"sid\":\"8888\",\"syscode\":\"09\",\"auth\":\"\",\"xsid\":\"\",\"extension\":[]}}"
         body = json.loads(body_raw)
         body["arg"]["pageIndex"] = self.id
+        # 不同平台要修改此处
+        # 0马蜂窝 1携程 2去哪儿
+        self.source = 1
         # 不同公园要修改此处
-        body["arg"]["poiId"] = 76635
-        self.source = 2
+        body["arg"]["poiId"] = 90855
+        
+        self.park_name = "ritan"
 
         headers = {
             "cookieorigin": "https://you.ctrip.com",
@@ -64,7 +73,8 @@ class ChaoyangSpider(scrapy.Spider):
                 "star": star,
                 "extra": extra,
                 "publish_time": timeStr,
-                "source": self.source
+                "source": self.source,
+                "park_name": self.park_name
             }
             self.log(res,logging.WARNING)
             try:
